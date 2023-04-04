@@ -20,16 +20,19 @@
     "access": "public"
   },
   "dependencies": {
+    "openapi-typescript-codegen": "^0.23.0",
     "dotenv": "^16.0.3",
     "iconv-lite": "^0.6.3",
-    "node-fetch": "^2.6.9",
-    "typescript": "^4.9.5"
+    "node-fetch": "^2.6.9"
   },
   "devDependencies": {
     "@types/node": "^18.15.10",
     "@types/node-fetch": "^2.6.2",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-typescript": "^11.0.0",
     "nodemon": "^2.0.21",
-    "openapi-typescript-codegen": "^0.23.0",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "tslib": "^2.5.0",
+    "typescript": "^4.9.5"
   }
 }
