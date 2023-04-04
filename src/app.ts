@@ -1,38 +1,42 @@
-import * as fs from "fs";
-import * as http from "http";
+import fs from "fs";
+import http from "http";
+import fetch, { RequestInit } from "node-fetch";
 import * as OpenAPI from "openapi-typescript-codegen";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const ENV = process.env;
+
+const { cookie, input = "./swagger.json", output = "./", request } = ENV;
+
+const isRemote = input?.startsWith("http");
 
 const config = {
-  url: "http://apollo-admin.study.youdao.com/course-service/v2/api-docs",
+  url: input,
   headers: {
-    cookie:
-      "DICT_PERS=v2|urscookie||DICT||web||-1||1679881751634||115.236.119.138||shdtest@163.com||TFh4OGRMpBRkEk4klhLk50wFP4OGk4TK0OfPLT46MYWROfk4UMRLqB0klhLlWk4kWRUMnf6ukMJBRpZhLPLOLwK0;",
+    cookie: cookie || "",
   },
+  input,
+  output,
+  request,
 };
 
 const fetchSwagger: (
   url: string,
-  options: http.RequestOptions
+  options: RequestInit
 ) => Promise<Buffer> = async (url, options) => {
-  return new Promise((resolve, reject) => {
-    const chunks: any[] = [];
-    console.log(http, http.request);
-    const request = http.request(url, options, (res) => {
-      res.on("error", reject);
-      res.on("data", (chunk) => {
-        chunks.push(chunk);
-      });
-      res.on("end", () => {
-        const buf = Buffer.concat(chunks);
-        resolve(buf);
-      });
-    });
-    request.end();
-  });
+  try {
+    const response = await fetch(url, options);
+    const data = await response.arrayBuffer();
+    return Buffer.from(data);
+  } catch (e) {
+    throw e;
+  }
 };
 
 const writeSwagger = async (buf: Buffer, output?: string) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     const _output = output || "./swagger.json";
     fs.writeFile(_output, buf, (err) => {
       if (err) {
@@ -44,19 +48,27 @@ const writeSwagger = async (buf: Buffer, output?: string) => {
   });
 };
 
-const generateAPI = (input?: string, output?: string) => {
+const generateAPI = (input: string, output: string) => {
   OpenAPI.generate({
-    //   input: "./LIKAISTEVENS_1-Test-1.0.0-resolved.json",
-    input: input || "./swagger.json",
-    output: output || "./api",
-    // request: "./hub/request.js",
+    input,
+    output,
+    request,
   });
 };
 
 const run = async () => {
-  const buf = await fetchSwagger(config.url, config);
-  await writeSwagger(buf);
-  await generateAPI();
+  if (isRemote) {
+    try {
+      const buf = await fetchSwagger(config.url, config);
+      console.log(buf);
+      const swaggerPath = await writeSwagger(buf);
+      generateAPI(swaggerPath, output);
+    } catch (e) {
+      console.error(e);
+    }
+  } else {
+    generateAPI(input, output);
+  }
 };
 
-run();
+export default run;

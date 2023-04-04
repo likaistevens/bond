@@ -1,4 +1,4 @@
 /node_modules/
-./swagger.json
+swagger.json
 api/
 dist/
