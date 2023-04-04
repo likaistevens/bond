@@ -1,10 +1,11 @@
 {
   "name": "@ranbo/bond",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "main": "dist/index.js",
   "scripts": {
     "watch": "tsc --watch ./src/index.ts",
-    "start": "tsc && node ./dist/index.js"
+    "start": "tsc && node ./dist/index.js",
+    "build": "rollup -c"
   },
   "bin": {
     "bond": "./bin/index.js"

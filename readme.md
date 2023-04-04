@@ -1,8 +1,12 @@
 # 第一版使用说明
 
-### 1. 在项目根目录创建 .env 文件
+### 1. 安装
 
-### 2. 配置以下字段
+```bash
+yarn add @ranbo/bond -D
+```
+
+### 2. 在项目根目录创建 .env 文件配置以下字段
 
 | Name      |   Type   | Default | Description                                           |
 | :-------- | :------: | :------ | :---------------------------------------------------- |
@@ -22,4 +26,8 @@ output=../front-web/api
 request=../front-web/request.ts
 ```
 
-### 3. 在 terminal 中运行 bond
+### 3. 运行
+
+```bash
+yarn bond
+```
