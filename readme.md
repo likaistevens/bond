@@ -31,3 +31,7 @@ request=../front-web/request.ts
 ```bash
 yarn bond
 ```
+
+### Documentation
+
+- [自定义 request 文件](docs/custom-request-file.md)

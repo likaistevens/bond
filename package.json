@@ -1,6 +1,6 @@
 {
   "name": "@ranbo/bond",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "main": "dist/index.js",
   "scripts": {
     "watch": "tsc --watch ./src/index.ts",
@@ -16,7 +16,8 @@
   "description": "",
   "files": [
     "bin/index.js",
-    "dist/index.js"
+    "dist/index.js",
+    "docs/*"
   ],
   "publishConfig": {
     "access": "public"
