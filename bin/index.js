@@ -2,6 +2,6 @@
 
 "use strict";
 
-const bond = require("../dist/app.js").default;
+const bond = require("../dist/index.js").default;
 
 bond();
