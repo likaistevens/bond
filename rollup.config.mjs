@@ -28,5 +28,6 @@ export default {
     "dotenv",
     "iconv-lite",
     "node-fetch",
+    "fs-extra",
   ],
 };

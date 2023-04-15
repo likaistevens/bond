@@ -1,6 +1,6 @@
 {
+  "version": "1.0.10",
   "name": "@ranbo/bond",
-  "version": "1.0.6",
   "main": "dist/index.js",
   "scripts": {
     "watch": "tsc --watch ./src/index.ts",
@@ -23,6 +23,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@types/fs-extra": "^11.0.1",
     "dotenv": "^16.0.3",
     "iconv-lite": "^0.6.3",
     "node-fetch": "^2.6.9",

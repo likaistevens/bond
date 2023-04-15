@@ -1,0 +1,177 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "senior接口文档",
+    "version": "v1.0.0",
+    "title": "senior-manager 接口列表",
+    "license": {
+      "name": "Apache License, Version 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "apollo.study.youdao.com",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "学长学姐-微信端",
+      "description": "Wx Senior Application Controller"
+    },
+    { "name": "学长学姐专家库", "description": "Senior Info Controller" },
+    {
+      "name": "学长学姐审核表",
+      "description": "Senior Application Controller"
+    },
+    {
+      "name": "学长学姐说-后台审核",
+      "description": "Senior Content Audit Controller"
+    },
+    { "name": "学长学姐说-外部后台", "description": "Front Senior Controller" },
+    {
+      "name": "学长学姐说-微信端",
+      "description": "Wx Senior Content Controller"
+    },
+    {
+      "name": "学长学姐首页-微信端",
+      "description": "Wx Senior Info Controller"
+    },
+    { "name": "用户咨询", "description": "User Consult Info Controller" },
+    { "name": "销售老师", "description": "Sale Teacher Controller" },
+    {
+      "name": "senior-application-controller",
+      "description": "Senior Application Controller"
+    },
+    { "name": "学长学姐说-外部后台", "description": "Front Senior Controller" },
+    {
+      "name": "学长学姐说-微信端-学习内容",
+      "description": "Wx Senior Content Controller"
+    },
+    {
+      "name": "学长学姐说-微信端-用户学习",
+      "description": "Wx Senior Learn Content Controller"
+    }
+  ],
+  "paths": {
+    "/senior-manager/senior/application/advanced/audit": {
+      "post": {
+        "tags": ["学长学姐审核表"],
+        "summary": "高级审核",
+        "operationId": "advancedAuditUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "param",
+            "description": "param",
+            "required": true,
+            "schema": {
+              "originalRef": "SeniorApplicationAuditParam",
+              "$ref": "#/definitions/SeniorApplicationAuditParam"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "OK", "schema": { "type": "boolean" } }
+        },
+        "security": [{ "Authorization": ["global"] }],
+        "deprecated": false
+      }
+    },
+    "/senior-service/application/advanced/audit/history": {
+      "get": {
+        "tags": ["senior-application-controller"],
+        "summary": "高级审核历史",
+        "operationId": "advancedAuditHistoryUsingGET",
+        "produces": ["*/*"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AuditOperationVo",
+                "originalRef": "AuditOperationVo"
+              }
+            }
+          }
+        },
+        "security": [{ "Authorization": ["global"] }],
+        "deprecated": false
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Authorization": { "type": "apiKey", "name": "cookie", "in": "header" }
+  },
+  "definitions": {
+    "BackendAdvancedSeniorApplicationListItemVo": {
+      "type": "object",
+      "properties": {
+        "auditStatus": {
+          "type": "integer",
+          "format": "int32",
+          "description": "审核状态"
+        },
+        "auditTime": {
+          "type": "integer",
+          "format": "int64",
+          "description": "审核时间"
+        },
+        "experience": {
+          "type": "integer",
+          "format": "int32",
+          "description": "辅导经验 -1 无 0 不满一年 1 1年 2 2年 3 3年 4 3年以上"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int32",
+          "description": "性别 1男 0女 2未知"
+        },
+        "id": { "type": "integer", "format": "int64", "description": "id" },
+        "nickname": { "type": "string", "description": "昵称" },
+        "phoneNumber": { "type": "string", "description": "手机号码" },
+        "realName": { "type": "string", "description": "真实姓名" },
+        "retestScore": {
+          "type": "integer",
+          "format": "int32",
+          "description": "复试成绩"
+        },
+        "score": {
+          "type": "integer",
+          "format": "int32",
+          "description": "初试成绩"
+        },
+        "submitTime": {
+          "type": "integer",
+          "format": "int64",
+          "description": "提交审核时间"
+        },
+        "userId": { "type": "string", "description": "userId" }
+      },
+      "title": "BackendAdvancedSeniorApplicationListItemVo",
+      "description": "后台-高级申请列表项Vo"
+    },
+    "AuditOperationVo": {
+      "type": "object",
+      "properties": {
+        "auditTime": { "type": "integer", "format": "int64" },
+        "operation": { "type": "string" },
+        "operatorUserId": { "type": "string" },
+        "operatorUserName": { "type": "string" },
+        "remark": { "type": "string" }
+      },
+      "title": "AuditOperationVo",
+      "description": "后台-审核记录VO"
+    }
+  }
+}
