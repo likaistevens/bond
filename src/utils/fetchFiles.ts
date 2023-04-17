@@ -1,5 +1,6 @@
 import fetch, { RequestInit } from "node-fetch";
 import fs from "fs-extra";
+import ora from "ora";
 
 const isRemote = (url: string) => {
   return url.startsWith("http");
@@ -7,7 +8,7 @@ const isRemote = (url: string) => {
 
 export const fetchFiles: (
   url: string | string[],
-  options: RequestInit
+  options?: RequestInit
 ) => Promise<Buffer[]> = async (url, options) => {
   try {
     const urls: string[] = [];

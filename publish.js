@@ -25,4 +25,4 @@ const newPackageObj = {
 
 fs.writeFileSync("./package.json", JSON.stringify(newPackageObj, "", "\t"));
 
-// child_process.execSync("npm publish");
+child_process.execSync("npm publish");
