@@ -29,7 +29,12 @@ export const loadConfig = async () => {
     // console.log(chalk.green(`从 ${envName} 中读取配置`));
     config = process.env;
   }
-  const { cookie, input = "./swagger.json", output = "./", request } = config;
+  const {
+    cookie,
+    input = "./swagger.json",
+    output = "./api",
+    request,
+  } = config;
 
   if (Array.isArray(input)) {
     urls.push(...input);
@@ -40,6 +45,12 @@ export const loadConfig = async () => {
       urls.push(input);
     }
   }
+
+  if (urls.length === 0) {
+    console.log(chalk.red(`缺少 swagger 文件路径`));
+    process.exit();
+  }
+
   return {
     url: urls,
     headers: {
