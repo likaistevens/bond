@@ -2,32 +2,21 @@ import fs from "fs-extra";
 import path from "path";
 import * as OpenAPI from "openapi-typescript-codegen";
 import dotenv from "dotenv";
-import { fetchFiles, mergeSwagger, sleep } from "./utils";
+import { fetchFiles, loadConfig, mergeSwagger, sleep } from "./utils";
 import ora from "ora";
 
 dotenv.config();
 
-const ENV = process.env;
 const cwd = process.cwd();
 
-const { cookie, input = "./swagger.json", output = "./", request } = ENV;
-
-const config = {
-  url: input,
-  headers: {
-    cookie: cookie || "",
-  },
-  input,
-  output,
-  request,
-};
-
 const bond = async () => {
+  const { url, headers, output, request } = await loadConfig();
+
   try {
     fs.removeSync(path.resolve(cwd, output));
     const fetchSpinner = ora();
     fetchSpinner.start("正在从远端获取 swagger 文件");
-    const bufList = await fetchFiles(config.url, config);
+    const bufList = await fetchFiles(url, { headers });
     await sleep(2000);
     fetchSpinner.succeed("获取 swagger 文件成功 !");
 

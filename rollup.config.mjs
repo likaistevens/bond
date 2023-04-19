@@ -43,7 +43,7 @@ export default {
     "iconv-lite",
     "node-fetch",
     "fs-extra",
-    // "chalk",
+    "chalk",
     // "ora",
   ],
 };
