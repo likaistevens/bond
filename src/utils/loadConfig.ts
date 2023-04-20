@@ -41,7 +41,7 @@ export const loadConfig = async () => {
   } else {
     if (input.includes(";")) {
       urls.push(...input.split(";"));
-    } else {
+    } else if (!!input) {
       urls.push(input);
     }
   }
