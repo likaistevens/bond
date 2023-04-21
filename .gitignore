@@ -3,4 +3,5 @@ swagger.json
 api/
 dist/
 .env
+bond.config.js
 src/run.ts
