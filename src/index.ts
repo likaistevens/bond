@@ -20,8 +20,33 @@ const cwd = process.cwd();
 const bond = async () => {
   try {
     // 读取配置文件
-    const { input, headers, output, request, mergeConfig, customConfig } =
-      await loadConfig();
+    const {
+      input,
+      headers,
+      output,
+      request,
+      postfix,
+      mergeConfig,
+      customConfig,
+    } = await loadConfig();
+
+    if (typeof postfix !== "undefined" && !postfix) {
+      if (customConfig?.servicesDimension === "all") {
+        console.log(
+          chalk.red(
+            `customConfig.servicesDimension 为 all 时， postfix 不允许为空字符串`
+          )
+        );
+        process.exit();
+      }
+      if (customConfig?.servicesDimension !== "service") {
+        console.log(
+          chalk.yellow(
+            `postfix 为空字符串时，请校验 tags 的 name 不可为全中文。 否则 Service 文件名可能为空`
+          )
+        );
+      }
+    }
 
     // course-manager 的 swagger 配置有问题，需要后端下次开发时修改
     if (input.find((x) => x.includes("course-manager/v2/api-docs"))) {
@@ -74,6 +99,7 @@ const bond = async () => {
           // output: path.resolve(cwd, output, `./${i}`),
           output: path.resolve(cwd, output),
           request,
+          postfix,
         })
       )
     );
