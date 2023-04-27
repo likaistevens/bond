@@ -1,40 +1,24 @@
 import fs from "fs-extra";
 import path from "path";
 import chalk from "chalk";
+import { BondConfig } from "../type";
 
 const configFileName = "bond.config.js";
-const envName = ".env";
 
-export const loadConfig = async () => {
+export const loadConfig = async (): Promise<BondConfig> => {
   const cwd = process.cwd();
   const configPath = path.resolve(cwd, configFileName);
-  const envPath = path.resolve(cwd, envName);
 
   const isConfigExist = fs.existsSync(configPath);
-  const isEnvExist = fs.existsSync(envPath);
 
-  if (!isConfigExist && !isEnvExist) {
-    console.log(
-      chalk.red(`找不到 ${configFileName} 配置文件 或 ${envName} 文件`)
-    );
+  if (!isConfigExist) {
+    console.log(chalk.red(`找不到 ${configFileName} 配置文件`));
     process.exit();
   }
 
   const urls: string[] = [];
-  let config;
-  if (isConfigExist) {
-    // console.log(chalk.green(`从 ${configFileName} 中读取配置`));
-    config = (await import(configPath)).default;
-  } else if (isEnvExist) {
-    // console.log(chalk.green(`从 ${envName} 中读取配置`));
-    config = process.env;
-  }
-  const {
-    cookie,
-    input = "./swagger.json",
-    output = "./api",
-    request,
-  } = config;
+  const config = (await import(configPath)).default;
+  const { cookie, input = "./swagger.json", output = "./api" } = config;
 
   if (Array.isArray(input)) {
     urls.push(...input);
@@ -52,11 +36,11 @@ export const loadConfig = async () => {
   }
 
   return {
-    url: urls,
+    ...config,
+    input: urls,
+    output,
     headers: {
       cookie: cookie || "",
     },
-    output,
-    request,
   };
 };

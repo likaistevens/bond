@@ -2,48 +2,82 @@ import fs from "fs-extra";
 import path from "path";
 import * as OpenAPI from "openapi-typescript-codegen";
 import dotenv from "dotenv";
-import { fetchFiles, loadConfig, mergeSwagger, sleep } from "./utils";
+import {
+  fetchFiles,
+  loadConfig,
+  mergeSwagger,
+  readJsonFiles,
+  transferTags,
+  validateSwaggers,
+} from "./utils";
 import ora from "ora";
+import chalk from "chalk";
 
 dotenv.config();
 
 const cwd = process.cwd();
 
 const bond = async () => {
-  const { url, headers, output, request } = await loadConfig();
-
   try {
+    // 读取配置文件
+    const { input, headers, output, request, mergeConfig, customConfig } =
+      await loadConfig();
+
+    // course-manager 的 swagger 配置有问题，需要后端下次开发时修改
+    if (input.find((x) => x.includes("course-manager/v2/api-docs"))) {
+      console.log(chalk.red(`course-manager 暂不支持，请联系管理员`));
+      process.exit();
+    }
+
+    // 删除旧的输出文件夹
     fs.removeSync(path.resolve(cwd, output));
+
+    // 读取所有 swagger 文件
     const fetchSpinner = ora();
-    fetchSpinner.start("正在从远端获取 swagger 文件");
-    const bufList = await fetchFiles(url, { headers });
-    await sleep(2000);
+    fetchSpinner.start("正在获取 swagger 文件");
+    const bufList = await fetchFiles(input, { headers });
     fetchSpinner.succeed("获取 swagger 文件成功 !");
 
+    // 合并 swagger 文件
     const mergeSpinner = ora();
-    const swaggerFilePaths = bufList.map((_, i) =>
+    const tempSwaggerFilePaths = bufList.map((_, i) =>
       path.resolve(cwd, `./temp_${i}.json`)
     );
     await Promise.all(
-      bufList.map((b, i) => fs.writeFile(swaggerFilePaths[i], b))
+      bufList.map((b, i) => fs.writeFile(tempSwaggerFilePaths[i], b))
     );
-    const swaggerPath = "./swagger.json";
-    // TODO 校验是否可以合并
-    const finalSwagger = await mergeSwagger(swaggerFilePaths);
-    fs.writeFileSync(
-      path.resolve(cwd, swaggerPath),
-      JSON.stringify(finalSwagger)
+    const originSwaggers = await readJsonFiles(tempSwaggerFilePaths);
+    const validateOriginSwaggers = validateSwaggers(originSwaggers);
+    const swaggers = transferTags([...validateOriginSwaggers], customConfig);
+    const mergedSwaggerList = await mergeSwagger(swaggers, mergeConfig);
+    const swaggerPaths =
+      mergedSwaggerList.length > 1
+        ? mergedSwaggerList.map((_, i) =>
+            path.resolve(cwd, `./swagger_${i}.json`)
+          )
+        : [path.resolve(cwd, `./swagger.json`)];
+    await Promise.all(
+      mergedSwaggerList.map((s, i) =>
+        fs.writeFile(swaggerPaths[i], JSON.stringify(s))
+      )
     );
-    swaggerFilePaths.forEach((path) => fs.unlink(path, () => {}));
+    tempSwaggerFilePaths.forEach((path) => fs.unlink(path, () => {}));
     mergeSpinner.succeed("合并 swagger 文件成功 !");
+
+    // 生成接口文件
     const generateSpinner = ora();
     generateSpinner.start("正在生成接口文件");
-    await OpenAPI.generate({
-      input: swaggerPath,
-      output: output,
-      request,
-    });
-    await sleep(1000);
+    await Promise.all(
+      swaggerPaths.map((p, i) =>
+        OpenAPI.generate({
+          input: p,
+          // output: path.resolve(cwd, output, `./${i}`),
+          output: path.resolve(cwd, output),
+          request,
+        })
+      )
+    );
+
     // ---------- 替换 request ，CancelablePromise
     const servicesDir = path.resolve(cwd, output, "./services");
     const files = await fs.readdir(servicesDir);
@@ -52,10 +86,6 @@ const bond = async () => {
     const newBufferList = bufferList.map((b) => {
       const oldString = b.toString("utf-8");
       const newString = oldString
-        // .replace(
-        //   `import { request as __request } from '../core/request';`,
-        //   `import { request as __request } from '${request}';`
-        // )
         .replaceAll(
           `import type { CancelablePromise } from '../core/CancelablePromise';\n`,
           ""
