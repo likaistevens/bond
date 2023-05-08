@@ -1,3 +1,5 @@
-const run = require("../dist/index");
+const libs = require("../dist/lib/index");
+const { bond } = libs;
 
-run();
+console.log(libs);
+// bond();

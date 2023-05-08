@@ -2,6 +2,7 @@
 
 "use strict";
 
-const bond = require("../dist/index.js");
+const libs = require("../dist/lib/index");
+const { bond } = libs;
 
 bond();

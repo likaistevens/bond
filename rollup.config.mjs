@@ -5,6 +5,14 @@ import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import path from "path";
 
+const cwd = process.cwd();
+
+const pkg = (
+  await import(path.join(cwd, "package.json"), {
+    assert: { type: "json" },
+  })
+).default;
+
 const getPlugins = () => {
   const plugins = [
     typescript({
@@ -25,17 +33,21 @@ const getPlugins = () => {
   return [...plugins, terser()];
 };
 
-const cwd = process.cwd();
-
 export default {
   input: path.resolve(cwd, "src/index.ts"),
-  output: {
-    dir: path.resolve(cwd, "./dist"),
-    entryFileNames: "[name].js",
-    // exports: "named",
-    // file: path.resolve(cwd, "./dist/index.js"),
-    format: "cjs",
-  },
+  output: [
+    {
+      file: pkg.main,
+      format: "cjs",
+    },
+  ],
+  // output: {
+  //   dir: path.resolve(cwd, "./dist"),
+  //   entryFileNames: "[name].js",
+  //   // exports: "named",
+  //   // file: path.resolve(cwd, "./dist/index.js"),
+  //   format: "cjs",
+  // },
   plugins: getPlugins(),
   external: [
     "openapi-typescript-codegen",

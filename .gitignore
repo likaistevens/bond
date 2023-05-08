@@ -1,7 +1,7 @@
 /node_modules/
 swagger.json
-api/
+/api/
 dist/
 .env
 bond.config.js
-src/run.ts
+src/run.js
