@@ -1,6 +1,5 @@
 import fetch, { RequestInit } from "node-fetch";
 import fs from "fs-extra";
-import chalk from "chalk";
 
 const isRemote = (url: string) => {
   return url.startsWith("http");

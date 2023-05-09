@@ -1,5 +1,6 @@
-import { BondConfig, Swagger, SwaggerPathMethodObject } from "../type";
+import { Swagger, SwaggerPathMethodObject } from "../type";
 import { update, set, camelCase, upperFirst } from "lodash";
+import { BondConfig } from "../../../../__type__";
 
 /** 将 swagger 中的 tags 的 name 和 description 交换，同时需要完成 paths[x].post.tags 中的替换 */
 export const transferTags = (

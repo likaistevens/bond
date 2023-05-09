@@ -1,5 +1,5 @@
 const libs = require("../dist/lib/index");
-const { bond } = libs;
+const { bond, mock } = libs;
 
 console.log(libs);
-// bond();
+// mock();

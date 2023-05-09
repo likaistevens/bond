@@ -5,3 +5,4 @@ dist/
 .env
 bond.config.js
 src/run.js
+/mock-server/

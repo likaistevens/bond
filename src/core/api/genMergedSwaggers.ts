@@ -7,7 +7,7 @@ import {
   validateSwaggers,
 } from "./utils";
 import ora from "ora";
-import { BondConfig } from "./type";
+import { BondConfig } from "../../../__type__";
 
 const cwd = process.cwd();
 

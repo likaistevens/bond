@@ -1,50 +1,60 @@
 {
-	"version": "2.0.2",
-	"name": "@ranbo/bond",
-	"main": "dist/index.js",
-	"scripts": {
-		"watch": "tsc --watch ./src/index.ts",
-		"start": "yarn build && node ./src/run.js",
-		"build": "rollup --config --environment NODE_ENV:development",
-		"release": "rollup --config --environment NODE_ENV:production"
-	},
-	"bin": {
-		"bond": "./bin/index.js"
-	},
-	"author": "likai",
-	"license": "ISC",
-	"description": "",
-	"files": [
-		"bin/index.js",
-		"dist/index.js",
-		"docs/*"
-	],
-	"publishConfig": {
-		"access": "public"
-	},
-	"dependencies": {
-		"@types/fs-extra": "^11.0.1",
-		"chalk": "4.1.2",
-		"dotenv": "^16.0.3",
-		"eslint": "^8.38.0",
-		"iconv-lite": "^0.6.3",
-		"lodash": "^4.17.21",
-		"node-fetch": "^2.6.9",
-		"openapi-typescript-codegen": "^0.23.0",
-		"ora": "^6.3.0"
-	},
-	"devDependencies": {
-		"@rollup/plugin-commonjs": "^24.1.0",
-		"@rollup/plugin-json": "^6.0.0",
-		"@rollup/plugin-node-resolve": "^15.0.1",
-		"@rollup/plugin-typescript": "^11.0.0",
-		"@types/lodash": "^4.14.194",
-		"@types/node": "^18.15.10",
-		"@types/node-fetch": "^2.6.2",
-		"nodemon": "^2.0.21",
-		"rollup-plugin-terser": "^7.0.2",
-		"ts-node": "^10.9.1",
-		"tslib": "^2.5.0",
-		"typescript": "^4.9.5"
-	}
+  "version": "2.0.2",
+  "name": "@ranbo/bond",
+  "scripts": {
+    "watch": "tsc --watch ./src/index.ts",
+    "start": "yarn build && node ./src/run.js",
+    "build": "rollup --config --environment NODE_ENV:development",
+    "release": "rollup --config --environment NODE_ENV:production"
+  },
+  "main": "dist/lib/index.js",
+  "module": "dist/module/index.js",
+  "bin": {
+    "bond": "bin/index.js"
+  },
+  "author": "likai",
+  "license": "ISC",
+  "description": "",
+  "files": [
+    "bin/index.js",
+    "dist/index.js",
+    "docs/*"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "chalk": "4.1.2",
+    "commander": "^10.0.1",
+    "dotenv": "^16.0.3",
+    "json-server": "^0.17.3",
+    "lodash": "^4.17.21",
+    "mockjs": "^1.1.0",
+    "node-fetch": "^2.6.9",
+    "openapi-typescript-codegen": "^0.23.0",
+    "ora": "^6.3.0",
+    "path-to-regexp": "^6.2.1",
+    "prettier": "^2.8.8",
+    "swagger-parser-mock": "^1.1.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@types/fs-extra": "^11.0.1",
+    "@types/json-server": "^0.14.4",
+    "@types/lodash": "^4.14.194",
+    "@types/mockjs": "^1.0.7",
+    "@types/node": "^18.15.10",
+    "@types/node-fetch": "^2.6.2",
+    "@types/prettier": "^2.7.2",
+    "eslint": "^8.38.0",
+    "nodemon": "^2.0.21",
+    "rollup-plugin-terser": "^7.0.2",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.5.0",
+    "typescript": "^5.0.4",
+    "iconv-lite": "^0.6.3"
+  }
 }

@@ -1,5 +1,6 @@
 import { camelCase, set, update } from "lodash";
-import { BondConfig, Swagger } from "../type";
+import { BondConfig } from "../../../../__type__";
+import { Swagger } from "../type";
 import { readJsonFiles } from "./readJsonFiles";
 
 export const mergeSwagger = async (
@@ -85,7 +86,7 @@ const merge = (
   return finalSwagger;
 };
 
-const resolveOperationId = (
+export const resolveOperationId = (
   params: {
     basePath: string;
     path: string;

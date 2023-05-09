@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import chalk from "chalk";
-import { BondConfig } from "../type";
+import { BondConfig } from "../../../../__type__";
 
 const configFileExt = ["js", "cjs"];
 const configFileName = "bond.config";

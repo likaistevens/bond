@@ -33,6 +33,8 @@ const getPlugins = () => {
   return [...plugins, terser()];
 };
 
+const EXTERNAL_WHITE_LIST = ["ora"];
+
 export default {
   input: path.resolve(cwd, "src/index.ts"),
   output: [
@@ -50,12 +52,7 @@ export default {
   // },
   plugins: getPlugins(),
   external: [
-    "openapi-typescript-codegen",
-    "dotenv",
-    "iconv-lite",
-    "node-fetch",
-    "fs-extra",
-    "chalk",
-    // "ora",
-  ],
+    ...Object.keys(pkg.dependencies || {}),
+    ...Object.keys(pkg.peerDependencies || {}),
+  ].filter((e) => !EXTERNAL_WHITE_LIST.includes(e)),
 };
