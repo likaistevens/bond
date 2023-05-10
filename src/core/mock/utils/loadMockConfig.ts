@@ -22,5 +22,9 @@ export const loadMockConfig = async (): Promise<BondConfig["mock"]> => {
   // TODO: 支持 esmodule （mjs）
   const userConfig = (await import(configPath)).default;
 
+  if (!userConfig.mock.input?.length) {
+    console.log(chalk.red(`找不到 mock.input 配置`));
+    process.exit();
+  }
   return userConfig.mock;
 };

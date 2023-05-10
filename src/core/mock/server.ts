@@ -37,10 +37,10 @@ export const startServer = async (config: BondConfig["mock"]) => {
   server.listen(port, () => {
     console.log(
       chalk.green(`
-    Bond Mock Server is running...
+        Bond Mock Server is running...
 
-    http://localhost:${port}
-  `)
+        http://localhost:${port}
+      `)
     );
   });
 };

@@ -68,11 +68,6 @@ export const writeMiddleWare = async ({
     ${mockDataImportStr}
 
     module.exports = (req, res, next) => {
-      console.log(
-        req.method,
-        req.path,
-        isMatch("/tiku-manager/subject/fullSubjectKnowledge")(req.path)
-      );
       ${handleStr}
 
       next();
