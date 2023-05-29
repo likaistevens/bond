@@ -1,44 +1,42 @@
 import swaggerParserMock from "swagger-parser-mock";
 import fs from "fs-extra";
-import Mock from "mockjs";
+// import Mock from "mockjs";
 import { loadMockConfig } from "./utils/loadMockConfig";
 import { Swagger } from "../api/type";
 import { resolveOperationId } from "../api/utils";
-import { prettifyCode } from "../../utils";
+// import { prettifyCode } from "../../utils";
 import { startServer } from "./server";
 import path from "path";
-import { writeDB } from "./utils/write/writeDB";
-import { writeUtils } from "./utils/write/writeUtils";
-import { writeMiddleWare } from "./utils/write/writeMiddleware";
-import { writeData } from "./utils/write/writeData";
+// import { writeDB } from "./utils/write/writeDB";
+import {
+  MOCK_RES_CODE,
+  OperationIdHandleList,
+  UTIL_RELATIVE_PATH,
+} from "./utils/const";
+import {
+  writeData,
+  writeMiddleWare,
+  writeRequest,
+  writeUtils,
+} from "./utils/write";
 
 const cwd = process.cwd();
-const MOCK_RES_CODE = "200";
-/** server 目录下的相对路径 */
-const UTIL_RELATIVE_PATH = "./utils.js";
-const MIDDLEWARE_RELATIVE_PATH = "./middleware.js";
-const DATA_DIR_RELATIVE_PATH = "../data";
-// path.relative(
-//   path.resolve(cwd, output, "./core"),
-//   requestAbs
-// );
-export const OperationIdHandleList = ["method", "path"];
 
 /** 生成 mock 相关的代码 */
 export const mockGen = async () => {
-  const mockConfig = await loadMockConfig();
-  if (!mockConfig) {
+  const { mock, output, request } = await loadMockConfig();
+  if (!mock) {
     return;
   }
-
-  const { input, outputDir } = mockConfig;
-  const outputDataDir = path.resolve(cwd, outputDir, "data");
-  const outputServerDir = path.resolve(cwd, outputDir, "server");
+  const mockOutPutDir = mock.outputDir;
+  const mockInput = mock.input;
+  const outputDataDir = path.resolve(cwd, mockOutPutDir, "data");
+  const outputServerDir = path.resolve(cwd, mockOutPutDir, "server");
   fs.ensureDirSync(outputDataDir);
   fs.ensureDirSync(outputServerDir);
 
   const swaggerObjList = await Promise.all(
-    input.map((p) => fs.readJson(path.join(cwd, p)))
+    mockInput.map((p) => fs.readJson(path.join(cwd, p)))
   );
 
   // swagger-client 不支持本地路径。可使用 spec 字段手动传入。
@@ -65,9 +63,11 @@ export const mockGen = async () => {
         { operationId: OperationIdHandleList }
       );
       try {
-        const exampleStr = body.responses[MOCK_RES_CODE].example;
-        if (exampleStr) {
-          mockPatternObj[key] = JSON.parse(exampleStr);
+        if (mock.pathList.includes(path)) {
+          const exampleStr = body.responses[MOCK_RES_CODE].example;
+          if (exampleStr) {
+            mockPatternObj[key] = JSON.parse(exampleStr);
+          }
         }
       } catch {}
     });
@@ -75,24 +75,26 @@ export const mockGen = async () => {
 
   await Promise.all([
     writeData({ mockPatternObj, outputDataDir }),
-    writeDB(outputServerDir),
+    // writeDB(outputServerDir),
     writeUtils(path.join(outputServerDir, UTIL_RELATIVE_PATH)),
+    writeRequest({ output, request, port: mock.port }),
     writeMiddleWare({
       mockedSwaggerPathsObj,
       mockPatternObj,
-      outputDataDir,
+      // outputDataDir,
       outputServerDir,
+      pathList: mock.pathList,
     }),
   ]);
 };
 
 /** 启动 mock 服务 */
 export const mockServer = async () => {
-  const mockConfig = await loadMockConfig();
-  if (!mockConfig) {
+  const { mock } = await loadMockConfig();
+  if (!mock) {
     return;
   }
-  startServer(mockConfig);
+  startServer(mock);
 };
 
 export const mock = async () => {

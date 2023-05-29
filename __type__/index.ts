@@ -42,8 +42,9 @@ export type BondConfig = {
   headers?: Record<string, string>;
   mock?: {
     input: string[];
-    outputDir: string;
-    port: number;
-    db?: string;
+    outputDir?: string;
+    port?: number;
+    // db?: string;
+    pathList?: string[];
   };
 };

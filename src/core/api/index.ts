@@ -22,6 +22,7 @@ export const bond = async () => {
       postfix,
       mergeConfig,
       customConfig,
+      mock,
     } = await loadConfig();
 
     // 删除旧的输出文件夹
@@ -54,7 +55,7 @@ export const bond = async () => {
     );
 
     // 继续处理生成后的文件
-    await handleApiFiles({ output, request });
+    await handleApiFiles({ output, request, mock });
     generateSpinner.succeed(`接口文件生成成功 ${path.resolve(cwd, output)}`);
   } catch (e: any) {
     console.log(e);

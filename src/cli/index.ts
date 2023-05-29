@@ -13,8 +13,9 @@ const pkg = fs.readJsonSync(path.join(cwd, "package.json"));
 
 program.version(pkg.version, "-v, --version");
 
-// program.description("generates Typescript clients").action(() => {
-//   mock();
+// program.description("generates Typescript clients").action(async () => {
+//   await mockGen();
+//   await mockServer();
 // });
 
 program.description("generates Typescript clients").action(() => {
@@ -34,8 +35,6 @@ program
   .action(async () => {
     await mockGen();
     await mockServer();
-    // const swaggerFakerConfig = readSwaggerFakerConfig();
-    // startServer(swaggerFakerConfig);
   });
 
 program
@@ -43,11 +42,6 @@ program
   .description("generate mock data from swagger/openapi")
   .action(async () => {
     await mockGen();
-    // const swaggerFakerConfig = readSwaggerFakerConfig();
-    // console.log(
-    //   `Generate config to ${swaggerFakerConfig.outputFolder} folder successfully!`
-    // );
-    // jsonServerGen(swaggerFakerConfig);
   });
 
 program
@@ -55,8 +49,6 @@ program
   .description("Run mock server")
   .action(async () => {
     await mockServer();
-    // const swaggerFakerConfig = readSwaggerFakerConfig();
-    // startServer(swaggerFakerConfig);
   });
 
 program.parse(process.argv);

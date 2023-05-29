@@ -1,9 +1,12 @@
-import jsonServer from "json-server";
+import express from "express";
 import fs from "fs-extra";
 import { BondConfig } from "../../../__type__";
 import path from "path";
 import { prettifyCode } from "../../utils";
 import chalk from "chalk";
+import { IncomingMessage, ServerResponse } from "http";
+import proxy from "express-http-proxy";
+import cors from "cors";
 
 export const startServer = async (config: BondConfig["mock"]) => {
   if (!config) {
@@ -11,18 +14,8 @@ export const startServer = async (config: BondConfig["mock"]) => {
   }
 
   const cwd = process.cwd();
-  const defaultDbPath = path.join(
-    cwd,
-    config?.outputDir || "",
-    "server",
-    "db.json"
-  );
+  const { port = 8001 } = config;
 
-  // const defaultMiddlewaresPath = path.join(cwd,config?.outputDir||'','db.json')
-  const { db = defaultDbPath, port = 8001 } = config;
-  const server = jsonServer.create();
-  const router = jsonServer.router(db);
-  const defaultMiddleware = jsonServer.defaults();
   const middleware = require(path.join(
     cwd,
     config?.outputDir || "",
@@ -30,9 +23,27 @@ export const startServer = async (config: BondConfig["mock"]) => {
     "middleware.js"
   ));
 
-  server.use(defaultMiddleware);
+  const server = express();
+
+  // server.use(
+  //   proxy("apollo.study.youdao.com", {
+  //     filter: function (req, res) {
+  //       // console.log(req);
+  //       return !(req.url && pathList.includes(req.url));
+  //     },
+  //   })
+  // );
+
+  server.use((req: IncomingMessage, res, next) => {
+    const referer = req.headers.referer;
+    const origin = new URL(referer || req.headers.host || "").origin;
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    cors({
+      origin,
+    })(req, res, next);
+  });
+
   server.use(middleware);
-  server.use(router);
 
   server.listen(port, () => {
     console.log(

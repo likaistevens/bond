@@ -3,27 +3,25 @@ import fs from "fs-extra";
 import { prettifyCode } from "../../../../utils";
 import { Swagger, SwaggerPathMethodObject } from "../../../api/type";
 import { resolveOperationId } from "../../../api/utils";
-import { OperationIdHandleList } from "../..";
-
-/** server 目录下的相对路径 */
-const UTIL_RELATIVE_PATH = "./utils.js";
-const MIDDLEWARE_RELATIVE_PATH = "./middleware.js";
-const DATA_DIR_RELATIVE_PATH = "../data";
-// path.relative(
-//   path.resolve(cwd, output, "./core"),
-//   requestAbs
-// );
+import {
+  DATA_DIR_RELATIVE_PATH,
+  MIDDLEWARE_RELATIVE_PATH,
+  OperationIdHandleList,
+  UTIL_RELATIVE_PATH,
+} from "../const";
 
 export const writeMiddleWare = async ({
   mockedSwaggerPathsObj,
   mockPatternObj,
-  outputDataDir,
+  // outputDataDir,
   outputServerDir,
+  pathList,
 }: {
   mockedSwaggerPathsObj: Swagger["paths"];
   mockPatternObj: Record<string, Record<string, any>>;
-  outputDataDir: string;
+  // outputDataDir: string;
   outputServerDir: string;
+  pathList: string[];
 }) => {
   const mockDataImportStr = Object.entries(mockPatternObj)
     .map(([operationId]) =>
@@ -45,6 +43,7 @@ export const writeMiddleWare = async ({
       });
       return [...pre, ...temp];
     }, [] as { path: string; method: string; body: SwaggerPathMethodObject }[])
+    .filter((o) => pathList.includes(o.path))
     .map((o) => {
       const operationId = resolveOperationId(
         {
@@ -103,5 +102,5 @@ const genHandleStr = ({
 };
 
 const genMockDataImport = ({ operationId }: { operationId: string }) => {
-  return `const ${operationId} = require("${DATA_DIR_RELATIVE_PATH}/${operationId}.json");`;
+  return `const ${operationId} = require("${DATA_DIR_RELATIVE_PATH}/${operationId}.js");`;
 };

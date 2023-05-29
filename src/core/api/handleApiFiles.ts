@@ -1,19 +1,26 @@
 import fs from "fs-extra";
 import path from "path";
 import { fetchFiles } from "./utils";
+import { prettifyCode } from "../../utils";
+import { BondConfig } from "../../../__type__";
+import { isEmpty } from "lodash";
+import { writeRequest } from "../mock/utils/write";
+import { DEFAULT_MOCK_SERVER_PORT } from "../mock/utils/const";
 
 const cwd = process.cwd();
 
 export const handleApiFiles = async ({
   output,
   request,
+  mock,
 }: {
   output: string;
   request: string;
+  mock: BondConfig["mock"];
 }) => {
   await removeCancelablePromise(output);
 
-  replaceRequestFile({ output, request });
+  replaceRequestFile({ output, request, mock });
 
   removeHttpProtocol(output);
 };
@@ -51,20 +58,33 @@ const removeCancelablePromise = async (output: string) => {
 const replaceRequestFile = ({
   output,
   request,
+  mock,
 }: {
   output: string;
   request: string;
+  mock: BondConfig["mock"];
 }) => {
-  // TODO: 通用方法去除文件后缀
   const requestAbs = path.resolve(cwd, request || "");
   const exportPath = path.relative(
     path.resolve(cwd, output, "./core"),
     requestAbs
   );
-  fs.writeFileSync(
-    path.resolve(cwd, output, "./core/request.ts"),
-    `export * from "${exportPath.replace(".ts", "")}";`
-  );
+
+  if (!isEmpty(mock?.input) && !isEmpty(mock?.pathList)) {
+    writeRequest({
+      port: mock?.port || DEFAULT_MOCK_SERVER_PORT,
+      output,
+      request,
+    });
+  } else {
+    // TODO: 通用方法去除文件后缀
+    fs.writeFileSync(
+      path.resolve(cwd, output, "./core/request.ts"),
+      prettifyCode(`
+        export * from "${exportPath.replace(".ts", "")}";
+      `)
+    );
+  }
 };
 
 /**

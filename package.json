@@ -1,5 +1,5 @@
 {
-  "version": "2.0.2",
+  "version": "2.1.4",
   "name": "@ranbo/bond",
   "scripts": {
     "watch": "tsc --watch ./src/index.ts",
@@ -26,7 +26,10 @@
   "dependencies": {
     "chalk": "4.1.2",
     "commander": "^10.0.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-http-proxy": "^1.6.3",
     "json-server": "^0.17.3",
     "lodash": "^4.17.21",
     "mockjs": "^1.1.0",
@@ -42,6 +45,8 @@
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-typescript": "^11.0.0",
+    "@types/cors": "^2.8.13",
+    "@types/express-http-proxy": "^1.6.3",
     "@types/fs-extra": "^11.0.1",
     "@types/json-server": "^0.14.4",
     "@types/lodash": "^4.14.194",
@@ -50,11 +55,11 @@
     "@types/node-fetch": "^2.6.2",
     "@types/prettier": "^2.7.2",
     "eslint": "^8.38.0",
+    "iconv-lite": "^0.6.3",
     "nodemon": "^2.0.21",
     "rollup-plugin-terser": "^7.0.2",
     "ts-node": "^10.9.1",
     "tslib": "^2.5.0",
-    "typescript": "^5.0.4",
-    "iconv-lite": "^0.6.3"
+    "typescript": "^5.0.4"
   }
 }
