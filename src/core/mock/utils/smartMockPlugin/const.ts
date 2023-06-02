@@ -66,15 +66,15 @@ export const CELEBRITY_LIST = [
 ];
 
 export const SCHOOL_CREST_LIST = [
-  "https://ydschool-online.nosdn.127.net/%E4%B8%AD%E5…%E6%B0%91%E5%A4%A7%E5%AD%A6100021660127615260.jpg",
-  "https://ydschool-online.nosdn.127.net/%E5%8C%97%E4…%E8%8C%83%E5%A4%A7%E5%AD%A6100271660127641684.jpg",
-  "https://ydschool-online.nosdn.127.net/%E9%A6%96%E9…%E8%8C%83%E5%A4%A7%E5%AD%A6100281660127642483.jpg",
-  "https://ydschool-online.nosdn.127.net/%E4%B8%AD%E5…%E6%97%8F%E5%A4%A7%E5%AD%A6100521660127670660.jpg",
-  "https://ydschool-online.nosdn.127.net/%E5%8C%97%E4…%E5%90%88%E5%A4%A7%E5%AD%A6114171660128294866.jpg",
-  "https://ydschool-online.nosdn.127.net/%E4%B8%AD%E5…%E9%99%A2%E5%A4%A7%E5%AD%A6144301660128348654.jpg",
+  "https://ydschool-online.nosdn.127.net/%E4%B8%AD%E5%9B%BD%E7%A7%91%E5%AD%A6%E9%99%A2%E5%A4%A7%E5%AD%A6144301660128348654.jpg",
   "https://ydschool-online.nosdn.127.net/%E5%8D%97%E5%BC%80%E5%A4%A7%E5%AD%A6100551660127674228.jpg",
-  "https://ydschool-online.nosdn.127.net/%E5%A4%A9%E6…%E8%8C%83%E5%A4%A7%E5%AD%A6100651660127683895.jpg",
+  "https://ydschool-online.nosdn.127.net/%E5%A4%A9%E6%B4%A5%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6100651660127683895.jpg",
   "https://ydschool-online.nosdn.127.net/%E6%B2%B3%E5%8C%97%E5%A4%A7%E5%AD%A6100751660127693297.jpg",
-  "https://ydschool-online.nosdn.127.net/%E6%B2%B3%E5…%E8%8C%83%E5%A4%A7%E5%AD%A6100941660127707501.jpg",
+  "https://ydschool-online.nosdn.127.net/%E6%B2%B3%E5%8C%97%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6100941660127707501.jpg",
   "https://ydschool-online.nosdn.127.net/%E8%BE%BD%E5%AE%81%E5%A4%A7%E5%AD%A6101401660127801123.jpg",
+  "https://ydschool-online.nosdn.127.net/%E4%B8%AD%E5%9B%BD%E4%BA%BA%E6%B0%91%E5%A4%A7%E5%AD%A6100021660127615260.jpg",
+  "https://ydschool-online.nosdn.127.net/%E5%8C%97%E4%BA%AC%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6100271660127641684.jpg",
+  "https://ydschool-online.nosdn.127.net/%E9%A6%96%E9%83%BD%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6100281660127642483.jpg",
+  "https://ydschool-online.nosdn.127.net/%E4%B8%AD%E5%A4%AE%E6%B0%91%E6%97%8F%E5%A4%A7%E5%AD%A6100521660127670660.jpg",
+  "https://ydschool-online.nosdn.127.net/%E5%8C%97%E4%BA%AC%E8%81%94%E5%90%88%E5%A4%A7%E5%AD%A6114171660128294866.jpg",
 ];
