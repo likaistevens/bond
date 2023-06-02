@@ -15,7 +15,10 @@ export const writeData = async ({
     Object.entries(mockPatternObj).map(([operationId, mockPattern]) => {
       const mockData = Mock.mock(mockPattern);
       const filePath = path.join(outputDataDir, `${operationId}.js`);
-      return writeWithoutOverwrite({ filePath, mockData });
+      return writeWithoutOverwrite({
+        filePath,
+        mockData,
+      });
     })
   );
 };

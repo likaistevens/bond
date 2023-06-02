@@ -42,19 +42,17 @@ export const writeRequest = ({
         )}';
         import { OpenAPIConfig } from '${OPENAPI_RELATIVE_PATH}';
         
-        export const request = async (OpenAPIConfig: OpenAPIConfig, options: any) => {
+        export const request = async (OpenAPI: OpenAPIConfig, options: any) => {
           const pathList: string[] = config?.mock?.pathList || [];
-          if (pathList.length) {
+          const isDev = process.env.NODE_ENV === 'development';
+          if (pathList.length && isDev) {
             const url = options?.url || '';
             const isMock = pathList.includes(url);
             if (isMock) {
-              return _request({ ...OpenAPIConfig, BASE: '${mockServerHost}' }, options);
-            } else {
-              return _request(OpenAPIConfig, options);
+              return _request({ ...OpenAPI, BASE: '${mockServerHost}' }, options);
             }
-          } else {
-            return _request(OpenAPIConfig, options);
-          }
+          } 
+          return _request(OpenAPI, options);
     };
     `;
 

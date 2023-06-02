@@ -16,12 +16,14 @@ export const writeMiddleWare = async ({
   // outputDataDir,
   outputServerDir,
   pathList,
+  response,
 }: {
   mockedSwaggerPathsObj: Swagger["paths"];
   mockPatternObj: Record<string, Record<string, any>>;
   // outputDataDir: string;
   outputServerDir: string;
   pathList: string[];
+  response: string;
 }) => {
   const mockDataImportStr = Object.entries(mockPatternObj)
     .map(([operationId]) =>
@@ -58,6 +60,7 @@ export const writeMiddleWare = async ({
         operationId,
         method: o.method,
         path: o.path,
+        response,
       });
     })
     .join("\n \n");
@@ -88,15 +91,17 @@ const genHandleStr = ({
   operationId,
   method,
   path,
+  response,
 }: {
   operationId: string;
   method: string;
   path: string;
+  response: string;
 }) => {
   const routePattern = getRoutePath(path);
 
   return `if (req.method === "${method.toLocaleUpperCase()}" && isMatch("${routePattern}")(req.path)) {
-      res.status(200).send(${operationId});
+      res.status(200).send(${response.replaceAll("$data", operationId)});
       return;
     }`;
 };

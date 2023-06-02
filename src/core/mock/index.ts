@@ -1,24 +1,18 @@
 import swaggerParserMock from "swagger-parser-mock";
 import fs from "fs-extra";
-// import Mock from "mockjs";
 import { loadMockConfig } from "./utils/loadMockConfig";
 import { Swagger } from "../api/type";
-import { resolveOperationId } from "../api/utils";
-// import { prettifyCode } from "../../utils";
 import { startServer } from "./server";
 import path from "path";
-// import { writeDB } from "./utils/write/writeDB";
-import {
-  MOCK_RES_CODE,
-  OperationIdHandleList,
-  UTIL_RELATIVE_PATH,
-} from "./utils/const";
+import { UTIL_RELATIVE_PATH } from "./utils/const";
 import {
   writeData,
   writeMiddleWare,
   writeRequest,
   writeUtils,
 } from "./utils/write";
+import { resolveMockPatternObj } from "./utils/resolveMockPatternObj";
+import { smartMockPlugin } from "./utils/smartMockPlugin";
 
 const cwd = process.cwd();
 
@@ -46,35 +40,24 @@ export const mockGen = async () => {
   );
 
   // 合并所有 mockedSwagger 中的 paths，都已包含 example
-  const mockedSwaggerPathsObj = mockedSwaggerList.reduce((pre, next) => {
-    return { ...pre, ...next.paths };
-  }, {}) as Swagger["paths"];
+  const mockedSwaggerPathsObj = mockedSwaggerList.reduce(
+    (pre, next) => ({ ...pre, ...next.paths }),
+    {}
+  ) as Swagger["paths"];
 
-  const mockPatternObj: Record<string, Record<string, any>> = {};
-  Object.entries(mockedSwaggerPathsObj).forEach(([path, methodBody]) => {
-    Object.entries(methodBody).forEach(([method, body]) => {
-      const key = resolveOperationId(
-        {
-          basePath: "",
-          origin: body.operationId,
-          method,
-          path,
-        },
-        { operationId: OperationIdHandleList }
-      );
-      try {
-        if (mock.pathList.includes(path)) {
-          const exampleStr = body.responses[MOCK_RES_CODE].example;
-          if (exampleStr) {
-            mockPatternObj[key] = JSON.parse(exampleStr);
-          }
-        }
-      } catch {}
-    });
+  const mockPatternObj = resolveMockPatternObj({
+    mockedSwaggerPathsObj,
+    pathList: mock.pathList,
   });
 
+  const newMockPatternObj = smartMockPlugin(mockPatternObj);
+  // fs.writeFile(
+  //   path.resolve(cwd, "./mockPatternObj.json"),
+  //   JSON.stringify(newMockPatternObj)
+  // );
+
   await Promise.all([
-    writeData({ mockPatternObj, outputDataDir }),
+    writeData({ mockPatternObj: newMockPatternObj, outputDataDir }),
     // writeDB(outputServerDir),
     writeUtils(path.join(outputServerDir, UTIL_RELATIVE_PATH)),
     writeRequest({ output, request, port: mock.port }),
@@ -84,6 +67,7 @@ export const mockGen = async () => {
       // outputDataDir,
       outputServerDir,
       pathList: mock.pathList,
+      response: mock.response,
     }),
   ]);
 };

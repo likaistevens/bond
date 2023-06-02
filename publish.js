@@ -26,3 +26,5 @@ const newPackageObj = {
 fs.writeFileSync("./package.json", JSON.stringify(newPackageObj, "", "\t"));
 
 child_process.execSync("npm publish");
+
+// npm publish --tag alpha

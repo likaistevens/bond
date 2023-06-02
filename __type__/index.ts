@@ -46,5 +46,7 @@ export type BondConfig = {
     port?: number;
     // db?: string;
     pathList?: string[];
+    /** 使用模版自定义 response 的包裹, 其中的 $data 会被替换为 mock 数据 */
+    response?: string;
   };
 };
