@@ -5,6 +5,7 @@ import {
   ID_PATTERN,
   NORMAL_IMAGE_URL,
   PHONE_PATTERN,
+  YEAR_PATTERN,
 } from "./const";
 import { pipe } from "lodash/fp";
 import { fill } from "lodash";
@@ -27,12 +28,14 @@ export function middleware(
   const lowerCaseKey = key.toLowerCase();
   const newEntries = [key, value] as PipFuncProps["newEntries"];
   const res = pipe(
+    defaultPipe,
     endWithUrl,
     equalToCrest,
     endWithTitle,
     endWithName,
     endWithId,
     withTime,
+    endWithYear,
     withStatus,
     withPhone,
     endWithCode,
@@ -43,6 +46,29 @@ export function middleware(
   // console.log(res.newEntries);
   return res.newEntries;
 }
+
+/**
+ * 默认处理
+ */
+export const defaultPipe = ({
+  key,
+  value,
+  path,
+  lowerCaseKey,
+  newEntries,
+}: PipFuncProps): PipFuncProps => {
+  // 所有 string 使用中文字符
+  if (Array.isArray(value)) {
+    if (value[0] === "@string" || value[0] === "@word") {
+      newEntries = [key, ["@cword(3,10)"]];
+    }
+  } else {
+    if (value === "@string" || value === "@word") {
+      newEntries = [key, "@cword(3,10)"];
+    }
+  }
+  return { key, value, path, lowerCaseKey, newEntries };
+};
 
 /**
  * 以url或urls结尾
@@ -138,8 +164,6 @@ export const endWithName = ({
         newEntries = [key, "@cname"];
       } else if (pathStr.endsWith("tagname") || pathStr.endsWith("tagsname")) {
         newEntries = [key, "@cname"];
-      } else {
-        newEntries = [key, "@word"];
       }
     }
   }
@@ -183,6 +207,28 @@ export const withTime = ({
   ) {
     if (!Array.isArray(value)) {
       newEntries = [key, "@TIMESTAMP"];
+    }
+  }
+  return { key, value, path, lowerCaseKey, newEntries };
+};
+
+/**
+ * 以 year 结尾
+ */
+export const endWithYear = ({
+  key,
+  value,
+  path,
+  lowerCaseKey,
+  newEntries,
+}: PipFuncProps): PipFuncProps => {
+  if (lowerCaseKey.endsWith("year")) {
+    if (!Array.isArray(value)) {
+      if (value.startsWith("@integer")) {
+        newEntries = [key, YEAR_PATTERN];
+      } else if (value.startsWith("@string")) {
+        newEntries = [key, "@YEARSTRING"];
+      }
     }
   }
   return { key, value, path, lowerCaseKey, newEntries };

@@ -5,6 +5,9 @@ export const NORMAL_IMAGE_URL = "https://picsum.photos/600/400";
 export const ID_PATTERN = "@integer(100000,999999)";
 export const PHONE_PATTERN = "@integer(13000000000,13999999999)";
 export const CODE_PATTERN = "@integer(100,99999)";
+export const YEAR_PATTERN = `@integer(${new Date().getFullYear() - 5},${
+  new Date().getFullYear() + 5
+})`;
 
 export const SCHOOL_LIST = [
   "清华大学",

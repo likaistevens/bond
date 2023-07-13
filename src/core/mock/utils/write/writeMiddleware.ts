@@ -9,6 +9,7 @@ import {
   OperationIdHandleList,
   UTIL_RELATIVE_PATH,
 } from "../const";
+import chalk from "chalk";
 
 export const writeMiddleWare = async ({
   mockedSwaggerPathsObj,
@@ -99,9 +100,21 @@ const genHandleStr = ({
   response: string;
 }) => {
   const routePattern = getRoutePath(path);
+  const needResponseWrapper = response && response.includes("$data");
+  const responseData = needResponseWrapper
+    ? response.replaceAll("$data", operationId)
+    : operationId;
+
+  if (response && !response.includes("$data")) {
+    console.log(
+      chalk.yellow(
+        "mock.response must contain the $data symbol to indicate mock data"
+      )
+    );
+  }
 
   return `if (req.method === "${method.toLocaleUpperCase()}" && isMatch("${routePattern}")(req.path)) {
-      res.status(200).send(${response.replaceAll("$data", operationId)});
+      res.status(200).send(${responseData});
       return;
     }`;
 };

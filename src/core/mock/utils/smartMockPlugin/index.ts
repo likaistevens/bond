@@ -9,6 +9,7 @@ import {
   PHONE_PATTERN,
   SCHOOL_CREST_LIST,
   SCHOOL_LIST,
+  YEAR_PATTERN,
 } from "./const";
 
 export const smartMockPlugin = (
@@ -40,6 +41,9 @@ export const smartMockPlugin = (
     },
     crest: function () {
       return this.pick(SCHOOL_CREST_LIST);
+    },
+    yearstring: function () {
+      return `${Mock.mock(YEAR_PATTERN)}`;
     },
   });
 

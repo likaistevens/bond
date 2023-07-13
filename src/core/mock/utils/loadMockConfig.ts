@@ -36,7 +36,9 @@ export const loadMockConfig = async (): Promise<
     input: [],
     port: DEFAULT_MOCK_SERVER_PORT,
     pathList: [],
+    whitelist: [],
     outputDir: path.join(output, DEFAULT_MOCK_OUTPUT_DIR),
+    response: "",
   };
 
   return {

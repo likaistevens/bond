@@ -4,7 +4,7 @@ import { loadMockConfig } from "./utils/loadMockConfig";
 import { Swagger } from "../api/type";
 import { startServer } from "./server";
 import path from "path";
-import { UTIL_RELATIVE_PATH } from "./utils/const";
+import { OperationIdHandleList, UTIL_RELATIVE_PATH } from "./utils/const";
 import {
   writeData,
   writeMiddleWare,
@@ -13,6 +13,7 @@ import {
 } from "./utils/write";
 import { resolveMockPatternObj } from "./utils/resolveMockPatternObj";
 import { smartMockPlugin } from "./utils/smartMockPlugin";
+import { resolveOperationId } from "../api/utils";
 
 const cwd = process.cwd();
 
@@ -45,20 +46,18 @@ export const mockGen = async () => {
     {}
   ) as Swagger["paths"];
 
-  const mockPatternObj = resolveMockPatternObj({
+  const { mockPatternObj, operationId2Path } = resolveMockPatternObj({
     mockedSwaggerPathsObj,
     pathList: mock.pathList,
   });
 
-  const newMockPatternObj = smartMockPlugin(mockPatternObj);
-  // fs.writeFile(
-  //   path.resolve(cwd, "./mockPatternObj.json"),
-  //   JSON.stringify(newMockPatternObj)
-  // );
-
   await Promise.all([
-    writeData({ mockPatternObj: newMockPatternObj, outputDataDir }),
-    // writeDB(outputServerDir),
+    writeData({
+      mockPatternObj,
+      outputDataDir,
+      whitelist: mock.whitelist,
+      operationId2Path,
+    }),
     writeUtils(path.join(outputServerDir, UTIL_RELATIVE_PATH)),
     writeRequest({ output, request, port: mock.port }),
     writeMiddleWare({

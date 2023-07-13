@@ -1,20 +1,21 @@
 import express from "express";
-import fs from "fs-extra";
+// import fs from "fs-extra";
 import { BondConfig } from "../../../__type__";
 import path from "path";
-import { prettifyCode } from "../../utils";
+// import { prettifyCode } from "../../utils";
 import chalk from "chalk";
-import { IncomingMessage, ServerResponse } from "http";
-import proxy from "express-http-proxy";
+import { IncomingMessage } from "http";
+// import proxy from "express-http-proxy";
 import cors from "cors";
 
-export const startServer = async (config: BondConfig["mock"]) => {
+const MAX_PORT_TRY = 20;
+
+export const startServer = async (config: Required<BondConfig["mock"]>) => {
   if (!config) {
     return;
   }
 
   const cwd = process.cwd();
-  const { port = 8001 } = config;
 
   const middleware = require(path.join(
     cwd,
@@ -45,13 +46,33 @@ export const startServer = async (config: BondConfig["mock"]) => {
 
   server.use(middleware);
 
-  server.listen(port, () => {
-    console.log(
-      chalk.green(`
-        Bond Mock Server is running...
-
-        http://localhost:${port}
-      `)
-    );
-  });
+  const startServer = (port: number) => {
+    server
+      .listen(port, () => {
+        console.log(
+          chalk.green(`
+          Bond Mock Server is running...
+  
+          http://localhost:${port}
+        `)
+        );
+      })
+      .on("error", (err) => {
+        console.log(
+          chalk.yellow(`
+          Port ${port} is already in use
+        `)
+        );
+        if (port + 1 < config.port + MAX_PORT_TRY) {
+          startServer(port + 1);
+        } else {
+          console.log(
+            chalk.red(`
+            Please check bond config
+          `)
+          );
+        }
+      });
+  };
+  startServer(config.port);
 };

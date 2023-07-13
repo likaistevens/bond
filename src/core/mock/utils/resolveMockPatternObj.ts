@@ -10,6 +10,8 @@ export const resolveMockPatternObj = ({
   pathList: string[];
 }) => {
   const mockPatternObj: Record<string, Record<string, any>> = {};
+  const operationId2Path: Record<string, any> = {};
+
   Object.entries(mockedSwaggerPathsObj).forEach(([path, methodBody]) => {
     Object.entries(methodBody).forEach(([method, body]) => {
       const key = resolveOperationId(
@@ -21,6 +23,7 @@ export const resolveMockPatternObj = ({
         },
         { operationId: OperationIdHandleList }
       );
+      operationId2Path[key] = path;
       try {
         if (pathList.includes(path)) {
           const exampleStr = body.responses[MOCK_RES_CODE].example;
@@ -31,5 +34,5 @@ export const resolveMockPatternObj = ({
       } catch {}
     });
   });
-  return mockPatternObj;
+  return { mockPatternObj, operationId2Path };
 };

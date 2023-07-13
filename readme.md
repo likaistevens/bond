@@ -48,3 +48,8 @@ yarn bond
 ### Documentation
 
 - [自定义 request 文件](docs/custom-request-file.md)
+
+### TODO
+
+- model 的合并
+- 整理 middleware ，暴露方法允许自定义，暴露mockjs自定义pattern方法
