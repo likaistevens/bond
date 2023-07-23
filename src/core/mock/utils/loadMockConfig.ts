@@ -8,6 +8,9 @@ import {
   DEFAULT_MOCK_OUTPUT_DIR,
   DEFAULT_MOCK_SERVER_PORT,
 } from "./const";
+import os from "os";
+
+const isWindows = os.type().toLowerCase().includes("windows");
 
 export const loadMockConfig = async (): Promise<
   Omit<BondConfig, "mock"> & { mock: Required<BondConfig["mock"]> }
@@ -25,7 +28,9 @@ export const loadMockConfig = async (): Promise<
   }
 
   // TODO: 支持 esmodule （mjs）
-  const userConfig = (await import(configPath)).default as BondConfig;
+  const userConfig = (
+    await import(isWindows ? "file:\\" + configPath : configPath)
+  ).default as BondConfig;
   const { output, mock } = userConfig;
   if (!mock?.input?.length) {
     console.log(chalk.red(`找不到 mock.input 配置`));

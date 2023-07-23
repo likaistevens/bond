@@ -2,7 +2,9 @@ import fs from "fs-extra";
 import path from "path";
 import chalk from "chalk";
 import { BondConfig } from "../../../../__type__";
+import os from "os";
 
+const isWindows = os.type().toLowerCase().includes("windows");
 const configFileExt = ["js", "cjs"];
 const configFileName = "bond.config";
 
@@ -21,7 +23,9 @@ export const loadConfig = async (): Promise<BondConfig> => {
 
   const urls: string[] = [];
   // TODO: 支持 esmodule （mjs）
-  const userConfig = (await import(configPath)).default;
+  const userConfig = (
+    await import(isWindows ? "file:\\" + configPath : configPath)
+  ).default;
   const { cookie, input = "./swagger.json", output = "./api" } = userConfig;
 
   if (Array.isArray(input)) {
