@@ -5,7 +5,7 @@ import { program } from "commander";
 // import { readSwaggerFakerConfig, DEFAULT_CONFIG } from "./utils";
 // import { jsonServerGen } from "../json-server";
 // import { startServer } from "./server";
-import { mockServer, mockGen, bond } from "../index";
+import { bond } from "../index";
 
 const cwd = process.cwd();
 
@@ -29,26 +29,26 @@ program
     bond();
   });
 
-program
-  .command("mock")
-  .description("Run mock server")
-  .action(async () => {
-    await mockGen();
-    await mockServer();
-  });
+// program
+//   .command("mock")
+//   .description("Run mock server")
+//   .action(async () => {
+//     await mockGen();
+//     await mockServer();
+//   });
 
-program
-  .command("mock:gen")
-  .description("generate mock data from swagger/openapi")
-  .action(async () => {
-    await mockGen();
-  });
+// program
+//   .command("mock:gen")
+//   .description("generate mock data from swagger/openapi")
+//   .action(async () => {
+//     await mockGen();
+//   });
 
-program
-  .command("mock:server")
-  .description("Run mock server")
-  .action(async () => {
-    await mockServer();
-  });
+// program
+//   .command("mock:server")
+//   .description("Run mock server")
+//   .action(async () => {
+//     await mockServer();
+//   });
 
 program.parse(process.argv);

@@ -1,5 +1,5 @@
 {
-  "version": "2.1.27",
+  "version": "2.1.26",
   "name": "@ranbo/bond",
   "scripts": {
     "watch": "tsc --watch ./src/index.ts",
@@ -37,8 +37,7 @@
     "openapi-typescript-codegen": "^0.23.0",
     "ora": "^6.3.0",
     "path-to-regexp": "^6.2.1",
-    "prettier": "^2.8.8",
-    "swagger-parser-mock": "^1.1.2"
+    "prettier": "^2.8.8"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.1.0",
