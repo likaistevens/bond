@@ -5,6 +5,7 @@ import { prettifyCode } from "../../utils";
 import { BondConfig } from "../../../__type__";
 import { isEmpty } from "lodash";
 import { writeRequest } from "../mock/utils/write";
+import child_process from "child_process";
 import { DEFAULT_MOCK_SERVER_PORT } from "../mock/utils/const";
 
 const cwd = process.cwd();
@@ -22,7 +23,9 @@ export const handleApiFiles = async ({
 
   replaceRequestFile({ output, request, mock });
 
-  removeHttpProtocol(output);
+  await removeHttpProtocol(output);
+
+  formatAllFile(output);
 };
 
 /**
@@ -43,11 +46,16 @@ const removeCancelablePromise = async (output: string) => {
       .replaceAll(`CancelablePromise`, "Promise");
     return Buffer.from(newString);
   });
-  await Promise.all(
-    newBufferList.map((data, i) => {
+  await Promise.all([
+    ...newBufferList.map((data, i) => {
       fs.writeFile(paths[i], data);
-    })
-  );
+    }),
+    new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 100);
+    }), // TODO: 这个地方写入，然后立即读取，会拿不到文件内容， 很奇怪
+  ]);
 };
 
 /**
@@ -97,4 +105,12 @@ const removeHttpProtocol = (output: string) => {
     OpenAPIPath,
     oldString.replaceAll("http:", "").replaceAll("https:", "")
   );
+};
+
+const formatAllFile = (output: string) => {
+  try {
+    child_process.execSync(`yarn prettier ${output} --write`);
+  } catch (e) {
+    console.log("Format Error \n", e);
+  }
 };
