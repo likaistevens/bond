@@ -80,8 +80,8 @@ const validateConfig = (config: BondConfig) => {
   }
 
   // TODO: course-manager 的 swagger 配置有问题，需要后端下次开发时修改
-  if (input.find((x) => x.includes("course-manager/v2/api-docs"))) {
-    console.log(chalk.red(`course-manager 暂不支持，请联系管理员`));
-    process.exit();
-  }
+  // if (input.find((x) => x.includes("course-manager/v2/api-docs"))) {
+  //   console.log(chalk.red(`course-manager 暂不支持，请联系管理员`));
+  //   process.exit();
+  // }
 };

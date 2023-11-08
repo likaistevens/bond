@@ -1,5 +1,5 @@
 {
-  "version": "2.1.27",
+  "version": "2.3.6",
   "name": "@ranbo/bond",
   "scripts": {
     "watch": "tsc --watch ./src/index.ts",

@@ -12,6 +12,7 @@ module.exports = {
     "https://apollo.study.youdao.com/school-manager/v2/api-docs",
     // "https://apollo.study.youdao.com/user-service/v2/api-docs",
     // "https://apollo.study.youdao.com/course-service/v2/api-docs",
+    "https://apollo.study.youdao.com/course-manager/v2/api-docs",
     // "https://apollo.study.youdao.com/vip-service/v2/api-docs",
     // "https://apollo.study.youdao.com/vip-manager/v2/api-docs",
     // "https://apollo.study.youdao.com/callback-manager/v2/api-docs",
